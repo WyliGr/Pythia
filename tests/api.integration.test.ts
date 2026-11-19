@@ -212,7 +212,8 @@ run('live instance', () => {
     const del = await req('/settings?/deleteAccount', { method: 'POST', jar: jarB, body: '' });
     expect(del.status).toBe(200); // followed JSON redirect to /login
     const gone = await req('/forms', { jar: jarB });
-    expect(gone.url).toContain('/login');
+    expect(gone.status).toBe(303);
+    expect(gone.headers.get('location')).toBe('/login');
   });
 
   it('openapi spec is published', async () => {

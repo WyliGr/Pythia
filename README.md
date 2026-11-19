@@ -130,7 +130,7 @@ npm run dev
 | `npm run check` | Typecheck (svelte-check) |
 | `npm run lint` | ESLint |
 | `npm test` | Unit tests |
-| `PYTHIA_BASE=http://localhost:3000 npx vitest run tests/api.integration.test.ts` | Live end-to-end suite against a running instance |
+| `PYTHIA_BASE=http://localhost:3000 npx vitest run tests/api.integration.test.ts` | Live end-to-end suite. Run **once against a fresh instance** (it asserts first-user-is-admin) |
 
 ## Project layout
 
