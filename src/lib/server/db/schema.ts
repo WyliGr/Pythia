@@ -1,21 +1,7 @@
 import { pgTable, uuid, text, boolean, timestamp, jsonb, integer, index } from 'drizzle-orm/pg-core';
+import type { Question, QuestionSnapshot } from '$lib/questions';
 
-export interface Question {
-  id: string;
-  type: 'short_text' | 'long_text' | 'single_choice' | 'multi_select' | 'dropdown' | 'rating' | 'date' | 'email' | 'number';
-  label: string;
-  required: boolean;
-  placeholder?: string;
-  helpText?: string;
-  options?: string[]; // choice types only
-  maxRating?: number; // rating only
-}
-
-export interface QuestionSnapshot {
-  id: string;
-  label: string;
-  type: Question['type'];
-}
+export type { Question, QuestionSnapshot };
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),

@@ -2,8 +2,8 @@
   import { enhance } from '$app/forms';
   import { t } from '$lib/i18n';
   import QuestionEditor from '$lib/components/QuestionEditor.svelte';
-  import { QUESTION_TYPES } from '$lib/server/questions';
-  import type { Question } from '$lib/server/db/schema';
+  import { QUESTION_TYPES } from '$lib/questions';
+  import type { Question } from '$lib/questions';
   import type { ActionData, PageData } from './$types';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();

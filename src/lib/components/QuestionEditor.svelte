@@ -1,6 +1,6 @@
 <script lang="ts">
   import { t } from '$lib/i18n';
-  import type { Question } from '$lib/server/db/schema';
+  import type { Question } from '$lib/questions';
 
   let {
     question,

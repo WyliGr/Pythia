@@ -1,7 +1,7 @@
 <script lang="ts">
   import { enhance } from '$app/forms';
   import { t } from '$lib/i18n';
-  import type { Question } from '$lib/server/db/schema';
+  import type { Question } from '$lib/questions';
   import type { ActionData, PageData } from './$types';
 
   let { data, form }: { data: PageData; form: ActionData } = $props();

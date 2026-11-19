@@ -1,17 +1,7 @@
 import { z } from 'zod';
-import type { Question, QuestionSnapshot } from './db/schema';
+import { QUESTION_TYPES, type Question, type QuestionSnapshot } from '$lib/questions';
 
-export const QUESTION_TYPES = [
-  'short_text',
-  'long_text',
-  'single_choice',
-  'multi_select',
-  'dropdown',
-  'rating',
-  'date',
-  'email',
-  'number'
-] as const;
+export { QUESTION_TYPES };
 
 const questionSchema = z.object({
   id: z.string().min(1).max(64),

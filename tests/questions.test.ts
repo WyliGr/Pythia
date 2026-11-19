@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { snapshotQuestions, validateAnswers, validateQuestions } from '../src/lib/server/questions';
-import type { Question } from '../src/lib/server/db/schema';
+import type { Question } from '../src/lib/questions';
 
 const base: Question[] = [
   { id: 'name', type: 'short_text', label: 'Name', required: true },
