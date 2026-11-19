@@ -1,4 +1,4 @@
-import { fail } from '@sveltejs/kit';
+import { fail, redirect } from '@sveltejs/kit';
 import { and, desc, eq } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { apiKeys, users } from '$lib/server/db/schema';
@@ -53,5 +53,11 @@ export const actions: Actions = {
     const id = String(data.get('id') ?? '');
     await db.delete(apiKeys).where(and(eq(apiKeys.id, id), eq(apiKeys.userId, locals.user!.id)));
     return {};
+  },
+  deleteAccount: async ({ locals, cookies }) => {
+    // RGPD "delete everything": cascades remove sessions, API keys, forms, responses.
+    await db.delete(users).where(eq(users.id, locals.user!.id));
+    cookies.delete('pythia_session', { path: '/' });
+    redirect(303, '/login');
   }
 };

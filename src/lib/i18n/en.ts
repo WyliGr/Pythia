@@ -129,7 +129,11 @@ export const en = {
     copyKey: 'Copy',
     revoke: 'Revoke',
     neverUsed: 'Never used',
-    lastUsed: 'Last used'
+    lastUsed: 'Last used',
+    dangerZone: 'Delete everything',
+    deleteAccount: 'Delete my account and all data',
+    deleteAccountHint: 'Deletes your account, forms, responses and API keys. Cannot be undone.',
+    deleteAccountConfirm: 'Delete your account, all forms and all responses permanently?'
   },
   admin: {
     title: 'Admin',

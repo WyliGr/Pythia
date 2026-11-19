@@ -17,9 +17,9 @@ export const POST: RequestHandler = async ({ request, locals }) => {
   const server = createPythiaMcpServer(locals.apiKey);
   const transport = new WebStandardStreamableHTTPServerTransport({ sessionIdGenerator: undefined });
   await server.connect(transport);
-  const response = await transport.handleRequest(request);
-  await server.close();
-  return response;
+  // No server.close() here: the response streams SSE asynchronously and the
+  // stateless transport cleans itself up when the stream ends.
+  return transport.handleRequest(request);
 };
 
 export const GET: RequestHandler = async () => {

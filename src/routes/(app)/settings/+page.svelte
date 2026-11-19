@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { enhance } from '$app/forms';
   import { t } from '$lib/i18n';
   import type { ActionData, PageData } from './$types';
 
@@ -100,6 +101,22 @@
         </div>
         <button class="btn primary" type="submit">{t.settings.newKey}</button>
       </form>
+    </div>
+
+    <div class="card stack">
+      <h2>{t.settings.dangerZone}</h2>
+      <p class="muted small" style="margin: 0;">{t.settings.deleteAccountHint}</p>
+      <div>
+        <form
+          method="POST"
+          action="?/deleteAccount"
+          use:enhance={({ cancel }) => {
+            if (!confirm(t.settings.deleteAccountConfirm)) cancel();
+          }}
+        >
+          <button class="btn danger" type="submit">{t.settings.deleteAccount}</button>
+        </form>
+      </div>
     </div>
   </div>
 </div>

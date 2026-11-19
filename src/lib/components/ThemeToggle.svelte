@@ -1,9 +1,10 @@
 <script lang="ts">
+  import { browser } from '$app/environment';
   import { t } from '$lib/i18n';
 
-  // data-theme is already set by the inline script in app.html.
+  // data-theme is already set by the inline script in app.html; SSR renders the default.
   let theme = $state<'light' | 'dark'>(
-    document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
+    browser && document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
   );
 
   function toggle() {

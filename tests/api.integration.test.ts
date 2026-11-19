@@ -16,6 +16,8 @@ class CookieJar {
 
 async function req(path: string, opts: RequestInit & { jar?: CookieJar } = {}): Promise<Response> {
   const headers = new Headers(opts.headers as HeadersInit);
+  // SvelteKit form actions enforce Origin; browsers send it automatically, fetch does not.
+  if (opts.method === 'POST' && !headers.has('origin')) headers.set('origin', BASE!);
   if (opts.jar?.header()) headers.set('cookie', opts.jar.header());
   if (opts.body && typeof opts.body === 'string' && !headers.has('content-type')) {
     headers.set('content-type', 'application/x-www-form-urlencoded');
@@ -25,6 +27,25 @@ async function req(path: string, opts: RequestInit & { jar?: CookieJar } = {}): 
     const [pair] = c.split(';');
     const eq = pair.indexOf('=');
     if (eq > 0) opts.jar?.store.set(pair.slice(0, eq).trim(), pair.slice(eq + 1));
+  }
+  // SvelteKit form actions answer fetch clients with JSON redirects — follow them.
+  if ((res.headers.get('content-type') ?? '').includes('application/json')) {
+    const clone = res.clone();
+    try {
+      const body = await clone.json();
+      if (body?.type === 'redirect' && body.location) {
+        return req(body.location, { jar: opts.jar, method: 'GET' });
+      }
+      // Action failure/success envelopes arrive with HTTP 200; surface the real status.
+      if (body?.type === 'failure' || body?.type === 'success') {
+        return new Response(JSON.stringify(body), {
+          status: body.status ?? 200,
+          headers: { 'content-type': 'application/json' }
+        });
+      }
+    } catch {
+      // not an action payload
+    }
   }
   return res;
 }
@@ -44,22 +65,22 @@ run('live instance', () => {
 
   it('first signup becomes admin, second is regular', async () => {
     const a = await signup(jarA, `a${ts}@test.dev`);
-    expect([302, 303]).toContain(a.status);
+    expect(a.status).toBe(200); // followed JSON redirect to /forms
     const adminRes = await req('/admin', { jar: jarA });
     expect(adminRes.status).toBe(200);
 
     const b = await signup(jarB, `b${ts}@test.dev`);
-    expect([302, 303]).toContain(b.status);
+    expect(b.status).toBe(200);
     const forbidden = await req('/admin', { jar: jarB });
-    expect([302, 303, 403]).toContain(forbidden.status); // redirected or forbidden
+    expect(forbidden.status).toBe(403);
   });
 
   it('owner can create a form via UI; public page renders', async () => {
     slug = `it-${ts}`;
     const create = await req('/forms?/create', { method: 'POST', jar: jarA, body: '' });
-    expect([302, 303]).toContain(create.status);
-    const location = create.headers.get('location')!;
-    formId = location.split('/')[2];
+    expect(create.status).toBe(200); // followed redirect to /forms/<id>/edit
+    formId = new URL(create.url).pathname.split('/')[2];
+    expect(formId).toMatch(/^[0-9a-f-]{36}$/);
     const save = await req(`/forms/${formId}/edit?/save`, {
       method: 'POST',
       jar: jarA,
@@ -185,6 +206,13 @@ run('live instance', () => {
     expect(mcpRes.status).toBe(200);
     const body = await mcpRes.text();
     expect(body).toContain('Ada Lovelace');
+  });
+
+  it('delete-everything removes the account and its data', async () => {
+    const del = await req('/settings?/deleteAccount', { method: 'POST', jar: jarB, body: '' });
+    expect(del.status).toBe(200); // followed JSON redirect to /login
+    const gone = await req('/forms', { jar: jarB });
+    expect(gone.url).toContain('/login');
   });
 
   it('openapi spec is published', async () => {

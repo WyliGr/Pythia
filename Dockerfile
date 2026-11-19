@@ -19,8 +19,9 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev --ignore-scripts
 
-# ---- runtime ----
-FROM node:22-alpine
+# ---- runtime: bare Alpine + nodejs apk (no npm/corepack — keeps the image small) ----
+FROM alpine:3.21
+RUN apk add --no-cache nodejs=~22
 WORKDIR /app
 ENV NODE_ENV=production
 RUN addgroup -S pythia && adduser -S pythia -G pythia

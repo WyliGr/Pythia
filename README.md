@@ -14,6 +14,14 @@ Open the URL in `PUBLIC_URL` (default <http://localhost:3000>). The **first acco
 
 That's it — one compose file, two services (app + Postgres), named volume for data, healthchecks and restart policies included.
 
+## Screenshots
+
+| Builder | Public form | Responses |
+|---|---|---|
+| ![Form builder](docs/screenshots/builder.png) | ![Public form](docs/screenshots/public-form.png) | ![Responses](docs/screenshots/responses.png) |
+
+_If the images are missing, run the app — the UI changes faster than screenshots do._
+
 ## Why this stack
 
 SvelteKit (Node adapter) + Postgres + Drizzle ORM, everything in one app image with the MCP server mounted as a route (`/mcp`) using the stateless Streamable HTTP transport. SvelteKit gives server-rendered pages, form actions, and API endpoints in one framework — so the public form stays fast on a phone without shipping a heavy client bundle. Postgres is the boring, correct choice for multi-account relational data; Drizzle keeps the schema type-checked with near-zero runtime weight. The runtime image only carries production deps plus Drizzle's SQL migrations, which run automatically at container start. Total: two containers, one volume, no build steps required from the operator beyond `docker compose up`.
