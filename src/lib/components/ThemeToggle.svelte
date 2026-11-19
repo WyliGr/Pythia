@@ -1,11 +1,10 @@
 <script lang="ts">
   import { t } from '$lib/i18n';
 
-  let theme = $state<'light' | 'dark'>('light');
-
-  $effect(() => {
-    theme = (document.documentElement.dataset.theme as 'light' | 'dark') ?? 'light';
-  });
+  // data-theme is already set by the inline script in app.html.
+  let theme = $state<'light' | 'dark'>(
+    document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
+  );
 
   function toggle() {
     theme = theme === 'light' ? 'dark' : 'light';

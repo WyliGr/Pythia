@@ -24,7 +24,8 @@ export default defineConfig(
   {
     rules: {
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      'svelte/no-at-html-tags': 'off'
+      // Pythia never deploys under a base path; plain hrefs are correct here.
+      'svelte/no-navigation-without-resolve': 'off'
     }
   },
   {

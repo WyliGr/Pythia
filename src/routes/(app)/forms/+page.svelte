@@ -25,7 +25,7 @@
     </form>
   </div>
 
-  {#if form?.error}
+  {#if form && 'error' in form}
     <p class="alert error">{form.error}</p>
   {/if}
 

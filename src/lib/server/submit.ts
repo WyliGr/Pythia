@@ -1,6 +1,6 @@
 import { createHmac } from 'node:crypto';
 import { db } from './db';
-import { forms, responses, type Form } from './db/schema';
+import { responses, type Form } from './db/schema';
 import { snapshotQuestions, validateAnswers } from './questions';
 
 export function isFormOpen(form: Form): boolean {

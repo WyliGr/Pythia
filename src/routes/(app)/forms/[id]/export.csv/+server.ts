@@ -10,7 +10,7 @@ export const GET: RequestHandler = async ({ params, locals }) => {
   const [form] = await db
     .select({ id: forms.id, slug: forms.slug })
     .from(forms)
-    .where(and(eq(forms.id, params.id), eq(forms.userId, locals.user.id)))
+    .where(and(eq(forms.id, params.id!), eq(forms.userId, locals.user.id)))
     .limit(1);
   if (!form) error(404, t.errors.notFound);
   const rows = await db.select().from(responses).where(eq(responses.formId, form.id)).orderBy(asc(responses.submittedAt));

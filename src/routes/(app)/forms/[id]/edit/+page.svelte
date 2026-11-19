@@ -86,7 +86,7 @@
           <label class="field" style="flex: 1; min-width: 200px;">
             {t.builder.slug}
             <span class="hint">{t.builder.slugHint}</span>
-            <input type="text" name="slug" bind:value={slug} required pattern="[a-z0-9][a-z0-9\-]{1,62}[a-z0-9]" />
+            <input type="text" name="slug" bind:value={slug} required pattern={'[a-z0-9][a-z0-9-]{1,62}[a-z0-9]'} />
           </label>
           <label class="field" style="min-width: 200px;">
             {t.builder.closeDate}

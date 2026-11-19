@@ -19,9 +19,7 @@ export function responsesToCsv(rows: FormResponse[]): string {
   }
   const header = ['submitted_at', ...columns.values()].map(csvCell).join(',');
   const lines = rows.map((r) =>
-    [r.submittedAt.toISOString(), ...[...columns.keys()].map((id) => csvCell(r.answers[id]))]
-      .map(csvCell)
-      .join(',')
+    [r.submittedAt.toISOString(), ...[...columns.keys()].map((id) => r.answers[id])].map(csvCell).join(',')
   );
   return [header, ...lines].join('\n');
 }
