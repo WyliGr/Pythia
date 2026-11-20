@@ -2,6 +2,7 @@
   import { enhance } from '$app/forms';
   import { t } from '$lib/i18n';
   import QuestionEditor from '$lib/components/QuestionEditor.svelte';
+  import DateTimePicker from '$lib/components/DateTimePicker.svelte';
   import { QUESTION_TYPES } from '$lib/questions';
   import type { Question } from '$lib/questions';
   import type { ActionData, PageData } from './$types';
@@ -88,7 +89,7 @@
           <label class="field" style="min-width: 200px;">
             {t.builder.closeDate}
             <span class="hint">{t.builder.closeDateHint}</span>
-            <input type="datetime-local" name="closeDate" bind:value={closeDate} />
+            <DateTimePicker name="closeDate" bind:value={closeDate} />
           </label>
         </div>
         <label class="row" style="gap: 8px; font-size: 0.9rem;">

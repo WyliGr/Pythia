@@ -85,6 +85,17 @@ export const en = {
       number: 'Number'
     }
   },
+  picker: {
+    notSet: 'Not set',
+    clear: 'Clear',
+    today: 'Today',
+    time: 'Time',
+    weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+    months: [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ]
+  },
   publicForm: {
     submit: 'Submit',
     thankYou: 'Thank you!',
