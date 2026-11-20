@@ -41,7 +41,8 @@
   }
 
   function duplicate(index: number) {
-    const copy = structuredClone(questions[index]);
+    // $state.snapshot strips the reactive proxy (structuredClone throws on proxies).
+    const copy = structuredClone($state.snapshot(questions[index]));
     copy.id = crypto.randomUUID().slice(0, 8);
     questions.splice(index + 1, 0, copy);
     questions = questions;

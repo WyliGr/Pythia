@@ -47,10 +47,10 @@
       {/each}
     </select>
     <div style="flex: 1;"></div>
-    <button class="btn small ghost" disabled={index === 0} onclick={() => onmove(index, -1)} title={t.builder.moveUp}>↑</button>
-    <button class="btn small ghost" disabled={index === total - 1} onclick={() => onmove(index, 1)} title={t.builder.moveDown}>↓</button>
-    <button class="btn small ghost" onclick={() => onduplicate(index)}>{t.builder.duplicate}</button>
-    <button class="btn small danger ghost" onclick={() => ondelete(index)}>{t.builder.delete}</button>
+    <button type="button" class="btn small ghost" disabled={index === 0} onclick={() => onmove(index, -1)} title={t.builder.moveUp}>↑</button>
+    <button type="button" class="btn small ghost" disabled={index === total - 1} onclick={() => onmove(index, 1)} title={t.builder.moveDown}>↓</button>
+    <button type="button" class="btn small ghost" onclick={() => onduplicate(index)}>{t.builder.duplicate}</button>
+    <button type="button" class="btn small danger ghost" onclick={() => ondelete(index)}>{t.builder.delete}</button>
   </div>
 
   <div class="row" style="align-items: flex-start; gap: 10px;">
