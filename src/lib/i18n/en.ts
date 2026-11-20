@@ -73,9 +73,6 @@ export const en = {
     save: 'Save form',
     saved: 'Saved.',
     slugTaken: 'This slug is already in use.',
-    webhookUrl: 'Webhook URL',
-    webhookSecret: 'Webhook secret',
-    webhookHint: 'Optional. We POST each new submission to this URL.',
     types: {
       short_text: 'Short text',
       long_text: 'Long text',

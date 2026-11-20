@@ -15,11 +15,8 @@
   let slug = $state(f.slug);
   let open = $state(f.open);
   let closeDate = $state(f.closeDate ? new Date(f.closeDate).toISOString().slice(0, 16) : '');
-  let webhookUrl = $state(f.webhookUrl ?? '');
-  let webhookSecret = $state(f.webhookSecret ?? '');
   let questions = $state<Question[]>(structuredClone(f.questions));
   let newType = $state<Question['type']>('short_text');
-  let showAdvanced = $state(false);
 
   function addQuestion() {
     questions.push({
@@ -98,23 +95,6 @@
           <input type="checkbox" name="open" bind:checked={open} style="width: auto;" />
           {t.builder.openLabel}
         </label>
-
-        <button class="btn small ghost" type="button" onclick={() => (showAdvanced = !showAdvanced)}>
-          {showAdvanced ? '▾' : '▸'} Webhook
-        </button>
-        {#if showAdvanced}
-          <div class="row wrap">
-            <label class="field" style="flex: 1; min-width: 220px;">
-              {t.builder.webhookUrl}
-              <span class="hint">{t.builder.webhookHint}</span>
-              <input type="url" name="webhookUrl" bind:value={webhookUrl} placeholder="https://example.com/hook" />
-            </label>
-            <label class="field" style="min-width: 180px;">
-              {t.builder.webhookSecret}
-              <input type="text" name="webhookSecret" bind:value={webhookSecret} />
-            </label>
-          </div>
-        {/if}
       </div>
 
       {#each questions as q, i (q.id)}
