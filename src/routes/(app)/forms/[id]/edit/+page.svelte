@@ -3,7 +3,7 @@
   import { t } from '$lib/i18n';
   import QuestionEditor from '$lib/components/QuestionEditor.svelte';
   import DateTimePicker from '$lib/components/DateTimePicker.svelte';
-  import { QUESTION_TYPES } from '$lib/questions';
+  import { migrateQuestionType } from '$lib/questions';
   import type { Question } from '$lib/questions';
   import type { ActionData, PageData } from './$types';
 
@@ -17,17 +17,19 @@
   let open = $state(f.open);
   let closeDate = $state(f.closeDate ? new Date(f.closeDate).toISOString().slice(0, 16) : '');
   let questions = $state<Question[]>(structuredClone(f.questions));
-  let newType = $state<Question['type']>('short_text');
 
   function addQuestion() {
     questions.push({
       id: crypto.randomUUID().slice(0, 8),
-      type: newType,
+      type: 'short_text',
       label: '',
-      required: false,
-      ...(newType === 'rating' ? { maxRating: 5 } : {}),
-      ...(['single_choice', 'multi_select', 'dropdown'].includes(newType) ? { options: [''] } : {})
+      required: false
     });
+    questions = questions;
+  }
+
+  function setType(index: number, type: Question['type']) {
+    questions[index] = migrateQuestionType(questions[index], type);
     questions = questions;
   }
 
@@ -99,17 +101,10 @@
       </div>
 
       {#each questions as q, i (q.id)}
-        <QuestionEditor question={q} index={i} total={questions.length} onmove={move} onduplicate={duplicate} ondelete={remove} />
+        <QuestionEditor question={q} index={i} total={questions.length} onmove={move} onduplicate={duplicate} ondelete={remove} ontypechange={setType} />
       {/each}
 
-      <div class="card row">
-        <select bind:value={newType} style="max-width: 200px;">
-          {#each QUESTION_TYPES as type (type)}
-            <option value={type}>{t.builder.types[type]}</option>
-          {/each}
-        </select>
-        <button class="btn" type="button" onclick={addQuestion}>+ {t.builder.addQuestion}</button>
-      </div>
+      <button class="btn add-question" type="button" onclick={addQuestion}>+ {t.builder.addQuestion}</button>
 
       <div class="row">
         <button class="btn primary" type="submit">{t.builder.save}</button>

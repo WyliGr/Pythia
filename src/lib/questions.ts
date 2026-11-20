@@ -25,6 +25,20 @@ export interface Question {
   maxRating?: number;
 }
 
+/** Switch a question's type, seeding per-type fields. Leftover fields are kept
+ *  (the server schema tolerates them) so toggling types back and forth is lossless. */
+export function migrateQuestionType(q: Question, type: Question['type']): Question {
+  const next: Question = { ...q, type };
+  if (type === 'rating' && (next.maxRating === undefined || next.maxRating < 2)) next.maxRating = 5;
+  if (
+    ['single_choice', 'multi_select', 'dropdown'].includes(type) &&
+    (!next.options || next.options.length === 0)
+  ) {
+    next.options = [''];
+  }
+  return next;
+}
+
 export interface QuestionSnapshot {
   id: string;
   label: string;

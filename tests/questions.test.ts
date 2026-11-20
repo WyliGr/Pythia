@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { snapshotQuestions, validateAnswers, validateQuestions } from '../src/lib/server/questions';
-import type { Question } from '../src/lib/questions';
+import { migrateQuestionType, type Question } from '../src/lib/questions';
 
 const base: Question[] = [
   { id: 'name', type: 'short_text', label: 'Name', required: true },
@@ -107,5 +107,38 @@ describe('snapshotQuestions', () => {
     const snap = snapshotQuestions(base);
     expect(snap[0]).toEqual({ id: 'name', label: 'Name', type: 'short_text' });
     expect(snap).toHaveLength(base.length);
+  });
+});
+
+describe('migrateQuestionType', () => {
+  const q: Question = { id: 'q1', type: 'short_text', label: 'Hi', required: false };
+
+  it('switches to text types without touching fields', () => {
+    const next = migrateQuestionType(q, 'email');
+    expect(next.type).toBe('email');
+    expect(next.options).toBeUndefined();
+    expect(next.maxRating).toBeUndefined();
+  });
+
+  it('seeds an option row when switching to a choice type', () => {
+    expect(migrateQuestionType(q, 'single_choice').options).toEqual(['']);
+    expect(migrateQuestionType(q, 'multi_select').options).toEqual(['']);
+    expect(migrateQuestionType(q, 'dropdown').options).toEqual(['']);
+  });
+
+  it('keeps existing options when switching between choice types', () => {
+    const withOptions: Question = { ...q, type: 'single_choice', options: ['a', 'b'] };
+    expect(migrateQuestionType(withOptions, 'dropdown').options).toEqual(['a', 'b']);
+  });
+
+  it('keeps leftover options when switching away from a choice type (lossless toggle)', () => {
+    const withOptions: Question = { ...q, type: 'single_choice', options: ['a'] };
+    expect(migrateQuestionType(withOptions, 'long_text').options).toEqual(['a']);
+  });
+
+  it('seeds maxRating for rating and clamps invalid values', () => {
+    expect(migrateQuestionType(q, 'rating').maxRating).toBe(5);
+    expect(migrateQuestionType({ ...q, maxRating: 1 }, 'rating').maxRating).toBe(5);
+    expect(migrateQuestionType({ ...q, maxRating: 8 }, 'rating').maxRating).toBe(8);
   });
 });

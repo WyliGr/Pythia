@@ -390,6 +390,18 @@ code.token {
   word-break: break-all;
 }
 
+/* Full-width dashed "add" button (form builder) */
+.btn.add-question {
+  width: 100%;
+  border-style: dashed;
+  padding-block: 13px;
+  color: var(--text-dim);
+}
+.btn.add-question:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
 /* Avatar circles (settings preview, header menu) */
 .avatar-circle {
   width: 32px;

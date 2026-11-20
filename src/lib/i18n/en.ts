@@ -60,6 +60,7 @@ export const en = {
     closeDate: 'Close date',
     closeDateHint: 'Optional. The form closes automatically at this time.',
     addQuestion: 'Add question',
+    typeLabel: 'Question type',
     duplicate: 'Duplicate',
     delete: 'Delete',
     moveUp: 'Move up',
