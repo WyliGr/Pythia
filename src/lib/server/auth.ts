@@ -5,7 +5,7 @@ import { sessions, users, type User } from './db/schema';
 
 const SESSION_TTL_MS = 1000 * 60 * 60 * 24 * 30; // 30 days
 
-export type SessionUser = Pick<User, 'id' | 'email' | 'isAdmin' | 'name' | 'accentColor' | 'logoUrl'>;
+export type SessionUser = Pick<User, 'id' | 'email' | 'isAdmin' | 'name' | 'accentColor' | 'logoUrl' | 'avatarUrl'>;
 
 export async function hashPassword(password: string): Promise<string> {
   const salt = randomBytes(16).toString('hex');
@@ -45,6 +45,7 @@ export async function getSessionUser(token: string | undefined): Promise<Session
       name: users.name,
       accentColor: users.accentColor,
       logoUrl: users.logoUrl,
+      avatarUrl: users.avatarUrl,
       expiresAt: sessions.expiresAt
     })
     .from(sessions)

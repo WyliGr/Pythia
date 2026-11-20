@@ -33,8 +33,9 @@ export const actions: Actions = {
     const slug = String(data.get('slug') ?? '').trim().toLowerCase();
     const open = data.get('open') === 'on';
     const closeDateRaw = String(data.get('closeDate') ?? '');
-    const webhookUrl = String(data.get('webhookUrl') ?? '').trim() || null;
-    const webhookSecret = String(data.get('webhookSecret') ?? '').trim() || null;
+    // Webhook URL/secret are intentionally not editable from the builder UI;
+    // they can still be set via the REST API (PATCH /api/v1/forms/:id) and
+    // existing values are preserved untouched here.
 
     let questionsJson: unknown;
     try {
@@ -47,7 +48,6 @@ export const actions: Actions = {
 
     if (!title) return fail(400, { error: t.builder.formTitle });
     if (!SLUG_RE.test(slug)) return fail(400, { error: t.builder.slugHint });
-    if (webhookUrl && !/^https?:\/\//.test(webhookUrl)) return fail(400, { error: 'Webhook URL must be http(s)' });
 
     const clash = await db
       .select({ id: forms.id })
@@ -64,8 +64,6 @@ export const actions: Actions = {
         slug,
         open,
         closeDate: closeDateRaw ? new Date(closeDateRaw) : null,
-        webhookUrl,
-        webhookSecret,
         questions: q.questions,
         updatedAt: new Date()
       })

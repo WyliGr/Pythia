@@ -2,7 +2,8 @@
   import { enhance } from '$app/forms';
   import { t } from '$lib/i18n';
   import QuestionEditor from '$lib/components/QuestionEditor.svelte';
-  import { QUESTION_TYPES } from '$lib/questions';
+  import DateTimePicker from '$lib/components/DateTimePicker.svelte';
+  import { migrateQuestionType } from '$lib/questions';
   import type { Question } from '$lib/questions';
   import type { ActionData, PageData } from './$types';
 
@@ -15,21 +16,20 @@
   let slug = $state(f.slug);
   let open = $state(f.open);
   let closeDate = $state(f.closeDate ? new Date(f.closeDate).toISOString().slice(0, 16) : '');
-  let webhookUrl = $state(f.webhookUrl ?? '');
-  let webhookSecret = $state(f.webhookSecret ?? '');
   let questions = $state<Question[]>(structuredClone(f.questions));
-  let newType = $state<Question['type']>('short_text');
-  let showAdvanced = $state(false);
 
   function addQuestion() {
     questions.push({
       id: crypto.randomUUID().slice(0, 8),
-      type: newType,
+      type: 'short_text',
       label: '',
-      required: false,
-      ...(newType === 'rating' ? { maxRating: 5 } : {}),
-      ...(['single_choice', 'multi_select', 'dropdown'].includes(newType) ? { options: [''] } : {})
+      required: false
     });
+    questions = questions;
+  }
+
+  function setType(index: number, type: Question['type']) {
+    questions[index] = migrateQuestionType(questions[index], type);
     questions = questions;
   }
 
@@ -41,7 +41,8 @@
   }
 
   function duplicate(index: number) {
-    const copy = structuredClone(questions[index]);
+    // $state.snapshot strips the reactive proxy (structuredClone throws on proxies).
+    const copy = structuredClone($state.snapshot(questions[index]));
     copy.id = crypto.randomUUID().slice(0, 8);
     questions.splice(index + 1, 0, copy);
     questions = questions;
@@ -91,44 +92,20 @@
           <label class="field" style="min-width: 200px;">
             {t.builder.closeDate}
             <span class="hint">{t.builder.closeDateHint}</span>
-            <input type="datetime-local" name="closeDate" bind:value={closeDate} />
+            <DateTimePicker name="closeDate" bind:value={closeDate} />
           </label>
         </div>
         <label class="row" style="gap: 8px; font-size: 0.9rem;">
           <input type="checkbox" name="open" bind:checked={open} style="width: auto;" />
           {t.builder.openLabel}
         </label>
-
-        <button class="btn small ghost" type="button" onclick={() => (showAdvanced = !showAdvanced)}>
-          {showAdvanced ? '▾' : '▸'} Webhook
-        </button>
-        {#if showAdvanced}
-          <div class="row wrap">
-            <label class="field" style="flex: 1; min-width: 220px;">
-              {t.builder.webhookUrl}
-              <span class="hint">{t.builder.webhookHint}</span>
-              <input type="url" name="webhookUrl" bind:value={webhookUrl} placeholder="https://example.com/hook" />
-            </label>
-            <label class="field" style="min-width: 180px;">
-              {t.builder.webhookSecret}
-              <input type="text" name="webhookSecret" bind:value={webhookSecret} />
-            </label>
-          </div>
-        {/if}
       </div>
 
       {#each questions as q, i (q.id)}
-        <QuestionEditor question={q} index={i} total={questions.length} onmove={move} onduplicate={duplicate} ondelete={remove} />
+        <QuestionEditor question={q} index={i} total={questions.length} onmove={move} onduplicate={duplicate} ondelete={remove} ontypechange={setType} />
       {/each}
 
-      <div class="card row">
-        <select bind:value={newType} style="max-width: 200px;">
-          {#each QUESTION_TYPES as type (type)}
-            <option value={type}>{t.builder.types[type]}</option>
-          {/each}
-        </select>
-        <button class="btn" type="button" onclick={addQuestion}>+ {t.builder.addQuestion}</button>
-      </div>
+      <button class="btn add-question" type="button" onclick={addQuestion}>+ {t.builder.addQuestion}</button>
 
       <div class="row">
         <button class="btn primary" type="submit">{t.builder.save}</button>

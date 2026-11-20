@@ -24,7 +24,10 @@ services:
       DATABASE_URL: postgres://${POSTGRES_USER:-pythia}:${POSTGRES_PASSWORD:-pythia}@db:5432/${POSTGRES_DB:-pythia}
       PUBLIC_URL: ${PUBLIC_URL:-http://localhost:3000}
       ORIGIN: ${PUBLIC_URL:-http://localhost:3000}
+      UPLOADS_DIR: /app/uploads
       PORT: 3000
+    volumes:
+      - pythia-uploads:/app/uploads
     ports:
       - "${APP_PORT:-3000}:3000"
     healthcheck:
@@ -36,3 +39,4 @@ services:
 
 volumes:
   pythia-db:
+  pythia-uploads:

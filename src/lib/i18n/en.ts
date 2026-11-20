@@ -11,6 +11,8 @@ export const en = {
     dashboard: 'Forms',
     settings: 'Settings',
     admin: 'Admin',
+    account: 'Account menu',
+    theme: 'Theme',
     logout: 'Log out',
     themeToggle: 'Toggle theme'
   },
@@ -58,6 +60,7 @@ export const en = {
     closeDate: 'Close date',
     closeDateHint: 'Optional. The form closes automatically at this time.',
     addQuestion: 'Add question',
+    typeLabel: 'Question type',
     duplicate: 'Duplicate',
     delete: 'Delete',
     moveUp: 'Move up',
@@ -73,9 +76,6 @@ export const en = {
     save: 'Save form',
     saved: 'Saved.',
     slugTaken: 'This slug is already in use.',
-    webhookUrl: 'Webhook URL',
-    webhookSecret: 'Webhook secret',
-    webhookHint: 'Optional. We POST each new submission to this URL.',
     types: {
       short_text: 'Short text',
       long_text: 'Long text',
@@ -87,6 +87,17 @@ export const en = {
       email: 'Email',
       number: 'Number'
     }
+  },
+  picker: {
+    notSet: 'Not set',
+    clear: 'Clear',
+    today: 'Today',
+    time: 'Time',
+    weekdays: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'],
+    months: [
+      'January', 'February', 'March', 'April', 'May', 'June',
+      'July', 'August', 'September', 'October', 'November', 'December'
+    ]
   },
   publicForm: {
     submit: 'Submit',
@@ -114,10 +125,8 @@ export const en = {
     title: 'Settings',
     profile: 'Profile',
     nameLabel: 'Display name',
-    branding: 'Branding',
     accentColor: 'Accent color',
     logoUrl: 'Logo URL',
-    brandingHint: 'Applied to your dashboard and all your public forms.',
     save: 'Save',
     saved: 'Saved.',
     apiKeys: 'API keys',
@@ -130,13 +139,24 @@ export const en = {
     revoke: 'Revoke',
     neverUsed: 'Never used',
     lastUsed: 'Last used',
+    agentTitle: 'Connect an AI agent',
+    agentHint: 'Config and prompt to hand to an MCP-compatible agent (Claude Code, etc.) so it can manage your forms.',
+    agentConfig: 'Client config (JSON)',
+    agentPrompt: 'Prompt for your agent',
+    agentKeyHint: 'Replace pk_your_key_here with an API key created above.',
+    avatar: 'Profile picture',
+    avatarHint: 'PNG, JPEG or WebP, 2 MB max.',
+    avatarUpload: 'Upload',
+    avatarRemove: 'Remove',
+    avatarType: 'Unsupported file type. Use PNG, JPEG or WebP.',
+    avatarSize: 'File too large — 2 MB max.',
     dangerZone: 'Delete everything',
     deleteAccount: 'Delete my account and all data',
     deleteAccountHint: 'Deletes your account, forms, responses and API keys. Cannot be undone.',
     deleteAccountConfirm: 'Delete your account, all forms and all responses permanently?'
   },
   admin: {
-    title: 'Admin',
+    title: 'Administration',
     users: 'Users',
     usage: 'Usage',
     defaults: 'Branding defaults',
