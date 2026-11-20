@@ -25,6 +25,7 @@ RUN apk add --no-cache nodejs=~22
 WORKDIR /app
 ENV NODE_ENV=production
 RUN addgroup -S pythia && adduser -S pythia -G pythia
+RUN mkdir -p /app/uploads && chown pythia:pythia /app/uploads
 COPY --from=prod-deps /app/node_modules ./node_modules
 COPY --from=build /app/build ./build
 COPY drizzle ./drizzle

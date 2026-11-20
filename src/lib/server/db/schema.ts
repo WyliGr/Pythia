@@ -11,6 +11,7 @@ export const users = pgTable('users', {
   name: text('name').notNull().default(''),
   accentColor: text('accent_color'),
   logoUrl: text('logo_url'),
+  avatarUrl: text('avatar_url'),
   createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow()
 });
 

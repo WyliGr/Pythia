@@ -56,15 +56,42 @@ Available tools: list_forms, create_form, update_form, get_responses. Use them t
   <h1>{t.settings.title}</h1>
 
   <div class="stack">
-    <form method="POST" action="?/saveProfile" class="card stack">
+    <div class="card stack">
       <h2>{t.settings.profile}</h2>
       {#if form?.savedProfile}<p class="alert info">{t.settings.saved}</p>{/if}
-      <label class="field">
-        {t.settings.nameLabel}
-        <input type="text" name="name" value={data.user.name} />
-      </label>
-      <div><button class="btn primary" type="submit">{t.settings.save}</button></div>
-    </form>
+      <form method="POST" action="?/saveProfile" class="stack">
+        <label class="field">
+          {t.settings.nameLabel}
+          <input type="text" name="name" value={data.user.name} />
+        </label>
+        <div><button class="btn primary" type="submit">{t.settings.save}</button></div>
+      </form>
+
+      <div class="field">
+        {t.settings.avatar}
+        <span class="hint">{t.settings.avatarHint}</span>
+        <div class="row wrap">
+          <span class="avatar-circle lg">
+            {#if data.user.avatarUrl}
+              <img src={data.user.avatarUrl} alt="" />
+            {:else}
+              {(data.user.name || data.user.email).slice(0, 1).toUpperCase()}
+            {/if}
+          </span>
+          <form method="POST" action="?/uploadAvatar" enctype="multipart/form-data" class="row" style="gap: 8px;">
+            <input type="file" name="avatar" accept="image/png,image/jpeg,image/webp" required style="width: auto;" />
+            <button class="btn small" type="submit">{t.settings.avatarUpload}</button>
+          </form>
+          {#if data.user.avatarUrl}
+            <form method="POST" action="?/removeAvatar">
+              <button class="btn small danger" type="submit">{t.settings.avatarRemove}</button>
+            </form>
+          {/if}
+        </div>
+        {#if form?.error && form?.avatar}<p class="alert error" style="margin-top: 8px;">{form.error}</p>{/if}
+        {#if form?.savedAvatar}<p class="alert info" style="margin-top: 8px;">{t.settings.saved}</p>{/if}
+      </div>
+    </div>
 
     <div class="card stack">
       <h2>{t.settings.apiKeys}</h2>

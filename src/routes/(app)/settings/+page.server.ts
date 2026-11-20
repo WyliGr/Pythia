@@ -3,6 +3,7 @@ import { and, asc, count, desc, eq, ne, sql } from 'drizzle-orm';
 import { db } from '$lib/server/db';
 import { apiKeys, forms, responses, settings, users } from '$lib/server/db/schema';
 import { createApiKey, SCOPES, type Scope } from '$lib/server/apikeys';
+import { saveAvatar, removeAvatarFiles } from '$lib/server/uploads';
 import type { Actions, PageServerLoad } from './$types';
 import { t } from '$lib/i18n';
 
@@ -74,6 +75,22 @@ export const actions: Actions = {
     const name = String(data.get('name') ?? '').trim().slice(0, 120);
     await db.update(users).set({ name }).where(eq(users.id, locals.user!.id));
     return { savedProfile: true };
+  },
+  uploadAvatar: async ({ request, locals }) => {
+    const data = await request.formData();
+    const file = data.get('avatar');
+    if (!(file instanceof File) || file.size === 0) {
+      return fail(400, { error: t.settings.avatarType, avatar: true });
+    }
+    const saved = await saveAvatar(locals.user!.id, file);
+    if (!saved.ok) return fail(400, { error: t.settings[saved.error], avatar: true });
+    await db.update(users).set({ avatarUrl: saved.url }).where(eq(users.id, locals.user!.id));
+    return { savedAvatar: true };
+  },
+  removeAvatar: async ({ locals }) => {
+    await removeAvatarFiles(locals.user!.id);
+    await db.update(users).set({ avatarUrl: null }).where(eq(users.id, locals.user!.id));
+    return { removedAvatar: true };
   },
   createKey: async ({ request, locals }) => {
     const data = await request.formData();
