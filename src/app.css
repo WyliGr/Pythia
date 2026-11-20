@@ -390,6 +390,19 @@ code.token {
   word-break: break-all;
 }
 
+/* Fenced code block (MCP config, prompts) */
+pre.codeblock {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  margin: 0;
+  overflow-x: auto;
+}
+
 @media (max-width: 640px) {
   .shell-header .inner {
     gap: 12px;

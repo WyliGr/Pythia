@@ -50,7 +50,7 @@ async function loadAdminData() {
   };
 }
 
-export const load: PageServerLoad = async ({ locals }) => {
+export const load: PageServerLoad = async ({ locals, url }) => {
   const keys = await db
     .select({
       id: apiKeys.id,
@@ -64,7 +64,8 @@ export const load: PageServerLoad = async ({ locals }) => {
     .where(eq(apiKeys.userId, locals.user!.id))
     .orderBy(desc(apiKeys.createdAt));
   const admin = locals.user!.isAdmin ? await loadAdminData() : null;
-  return { keys, scopes: SCOPES, admin };
+  const publicUrl = (process.env.PUBLIC_URL ?? url.origin).replace(/\/$/, '');
+  return { keys, scopes: SCOPES, admin, publicUrl };
 };
 
 export const actions: Actions = {

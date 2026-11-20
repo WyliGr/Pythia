@@ -6,12 +6,48 @@
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
   let copied = $state(false);
+  let copiedCfg = $state(false);
+  let copiedPrompt = $state(false);
 
   function copyKey(key: string) {
     navigator.clipboard.writeText(key);
     copied = true;
     setTimeout(() => (copied = false), 1500);
   }
+
+  function copyText(text: string, which: 'cfg' | 'prompt') {
+    navigator.clipboard.writeText(text);
+    if (which === 'cfg') {
+      copiedCfg = true;
+      setTimeout(() => (copiedCfg = false), 1500);
+    } else {
+      copiedPrompt = true;
+      setTimeout(() => (copiedPrompt = false), 1500);
+    }
+  }
+
+  const mcpUrl = $derived(`${data.publicUrl}/mcp`);
+  const agentConfig = $derived(
+    JSON.stringify(
+      {
+        mcpServers: {
+          pythia: {
+            type: 'http',
+            url: mcpUrl,
+            headers: { Authorization: 'Bearer pk_your_key_here' }
+          }
+        }
+      },
+      null,
+      2
+    )
+  );
+  const agentPrompt = $derived(`You have access to my self-hosted Pythia forms server through its MCP endpoint (Streamable HTTP).
+
+Connect to: ${mcpUrl}
+Authenticate every request with the header: Authorization: Bearer pk_your_key_here
+
+Available tools: list_forms, create_form, update_form, get_responses. Use them to list my forms, create or update forms from my prompts, and pull responses. These tools enforce ownership and scopes; if a call fails with an auth or scope error, tell me so I can fix the API key.`);
 </script>
 
 <svelte:head><title>{t.settings.title} · {t.app.name}</title></svelte:head>
@@ -87,6 +123,32 @@
         </div>
         <button class="btn primary" type="submit">{t.settings.newKey}</button>
       </form>
+    </div>
+
+    <div class="card stack">
+      <h2>{t.settings.agentTitle}</h2>
+      <p class="muted small" style="margin: 0;">{t.settings.agentHint}</p>
+
+      <div class="field">
+        <span class="row between">
+          <span>{t.settings.agentConfig}</span>
+          <button class="btn small" type="button" onclick={() => copyText(agentConfig, 'cfg')}>
+            {copiedCfg ? t.dashboard.copied : t.settings.copyKey}
+          </button>
+        </span>
+        <pre class="codeblock">{agentConfig}</pre>
+      </div>
+
+      <div class="field">
+        <span class="row between">
+          <span>{t.settings.agentPrompt}</span>
+          <button class="btn small" type="button" onclick={() => copyText(agentPrompt, 'prompt')}>
+            {copiedPrompt ? t.dashboard.copied : t.settings.copyKey}
+          </button>
+        </span>
+        <pre class="codeblock" style="white-space: pre-wrap;">{agentPrompt}</pre>
+      </div>
+      <p class="hint" style="margin: 0;">{t.settings.agentKeyHint}</p>
     </div>
 
     {#if data.admin}
