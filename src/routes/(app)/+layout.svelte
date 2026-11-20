@@ -23,9 +23,6 @@
       <nav class="row" style="gap: 14px;">
         <a class="nav-link" class:active={$page.url.pathname.startsWith('/forms')} href="/forms">{t.nav.dashboard}</a>
         <a class="nav-link" class:active={$page.url.pathname.startsWith('/settings')} href="/settings">{t.nav.settings}</a>
-        {#if data.user.isAdmin}
-          <a class="nav-link" class:active={$page.url.pathname.startsWith('/admin')} href="/admin">{t.nav.admin}</a>
-        {/if}
       </nav>
       <div style="flex: 1;"></div>
       <ThemeToggle />

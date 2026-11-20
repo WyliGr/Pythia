@@ -114,10 +114,8 @@ export const en = {
     title: 'Settings',
     profile: 'Profile',
     nameLabel: 'Display name',
-    branding: 'Branding',
     accentColor: 'Accent color',
     logoUrl: 'Logo URL',
-    brandingHint: 'Applied to your dashboard and all your public forms.',
     save: 'Save',
     saved: 'Saved.',
     apiKeys: 'API keys',
@@ -136,7 +134,7 @@ export const en = {
     deleteAccountConfirm: 'Delete your account, all forms and all responses permanently?'
   },
   admin: {
-    title: 'Admin',
+    title: 'Administration',
     users: 'Users',
     usage: 'Usage',
     defaults: 'Branding defaults',
