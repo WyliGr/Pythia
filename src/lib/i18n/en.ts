@@ -11,6 +11,8 @@ export const en = {
     dashboard: 'Forms',
     settings: 'Settings',
     admin: 'Admin',
+    account: 'Account menu',
+    theme: 'Theme',
     logout: 'Log out',
     themeToggle: 'Toggle theme'
   },

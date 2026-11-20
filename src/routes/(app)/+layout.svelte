@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from '$app/stores';
   import { t } from '$lib/i18n';
-  import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+  import UserMenu from '$lib/components/UserMenu.svelte';
   import type { LayoutData } from './$types';
 
   let { data, children }: { data: LayoutData; children: import('svelte').Snippet } = $props();
@@ -22,13 +22,9 @@
       </a>
       <nav class="row" style="gap: 14px;">
         <a class="nav-link" class:active={$page.url.pathname.startsWith('/forms')} href="/forms">{t.nav.dashboard}</a>
-        <a class="nav-link" class:active={$page.url.pathname.startsWith('/settings')} href="/settings">{t.nav.settings}</a>
       </nav>
       <div style="flex: 1;"></div>
-      <ThemeToggle />
-      <form method="POST" action="/logout">
-        <button class="btn ghost small" type="submit">{t.nav.logout}</button>
-      </form>
+      <UserMenu user={data.user} />
     </div>
   </header>
   <main class="shell-main">
