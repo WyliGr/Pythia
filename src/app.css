@@ -390,6 +390,22 @@ code.token {
   word-break: break-all;
 }
 
+/* Credit footer */
+.site-footer {
+  text-align: center;
+  padding: 30px 16px 20px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+.site-footer a {
+  color: inherit;
+  text-decoration-color: var(--border-strong);
+  text-underline-offset: 3px;
+}
+.site-footer a:hover {
+  color: var(--accent);
+}
+
 /* Full-width dashed "add" button (form builder) */
 .btn.add-question {
   width: 100%;
